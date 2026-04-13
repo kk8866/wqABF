@@ -59,10 +59,7 @@ def submit_alpha(s: requests.Session, alpha_id: str):
 
 
 class cfg:
-    data_path = "/storage/emulated/0/qua/check/" \
-        if sys.platform != "linux"\
-        else "/data/check/"
-    with open(data_path + '../brain.txt') as f:
+    with open('../brain.txt') as f:
         username, password = json.load(f)
 
 

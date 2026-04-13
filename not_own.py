@@ -13,4 +13,4 @@ df["idlist"] = "[]"
 df["combo"] = '''b = combo_a(alpha, nlength=500, mode="algo1");
 signed_power(
 b/ts_std_dev(b , 252),0.2)'''
-df.to_csv("/data/status/GLB-1-MINVOL1M-SUPER-notown-s1/data.csv")
+df.to_csv("../status/GLB-1-MINVOL1M-SUPER-notown-s1/data.csv")

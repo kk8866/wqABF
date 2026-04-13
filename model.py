@@ -37,7 +37,7 @@ class yamldataModel(BaseModel):
 class cfg:
     #     存放文件类型变量
 
-    path: str = "/data/" if sys.platform == "linux" else "C:/qua/"  # 路径变量
+    path: str = "../" # 路径变量
     project_path = ""
     check_path = path+"check/"
     test_path = path+"test/"

@@ -7,8 +7,7 @@ import pandas as pd
 
 
 def save_data(df: pd.DataFrame, file_name: str):
-    data_path = "/data/download/"
-    status_path = f"/data/status/{file_name}/"
+    status_path = f"../status/{file_name}/"
     # df = pd.read_csv(data_path+ file_name +".csv")
 #   a = df[["id", "type"]]
 #   left = input("左边输入：")
@@ -82,7 +81,6 @@ def get_datafields(instrument_type: str = 'EQUITY', region: str = 'GLB', delay: 
     datafields_df = pd.DataFrame(datafields_list_flat)
     datafields_df.sort_values(by=["alphaCount"], ascending=False, inplace=True)
     file_name = f"{region}-{delay}-{universe}-{dataset_id}-{name}"
-    datafields_df.to_csv("/tmp/"+file_name+".csv")
     save_data(datafields_df, file_name)
     print(file_name)
 

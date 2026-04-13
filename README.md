@@ -25,7 +25,7 @@ tips： 主要用于在linux上的回测， windows及其他需要小改动
 4. 执行回测：如`python main.py -c USA-s`,linux简化为: ./start.py USA
 
 5. 查看回测状态及剩余额度: ./limit.sh USAs.logs返回信息参考虑`[root@instance-mrs18uwm code]# ./limit.sh USAs.log
-   /data/status/USA-1-TOP3000-fundamental6-s202601/status.json
+   ../status/USA-1-TOP3000-fundamental6-s202601/status.json
    
    USA-1-TOP3000-fundamental6-s202601
    {

@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 path = r"D:\rjh\learn\consult/"
-path = "/data/check/pnls/"
+path = "../check/pnls/"
 
 def load_plt(ids: list):
     for i in ids:
@@ -12,5 +12,5 @@ def load_plt(ids: list):
         plt.plot(x, y, label=i)
     plt.legend(loc="lower right", fontsize=10, title="Functions", frameon=True)
     plt.show()
-    plt.savefig('/tmp/plot.png')
+    plt.savefig('./plot.png')
 # load_plt(["0g6K7Kv", "0LmP8bk"])

@@ -1,3 +1,3 @@
 #!/bin/bash
-ls  /data/status/ |grep -P "$1.*$2"
+ls  ../status/ |grep -P "$1.*$2"
 

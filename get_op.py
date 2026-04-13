@@ -31,7 +31,7 @@ def op_list(field=""):
     result = re.findall("\w+", code)
     result = list(set(result))
     print(field, "是否存在于当前字段中", field in result)
-    with open("/data/check/operates.json", "r") as f:
+    with open("../check/operates.json", "r") as f:
         op = json.load(f)
     k = [i["name"] for i in op if "REGULAR" not in i.get("scope")]
     print(len(k), k)
