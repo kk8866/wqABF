@@ -1,0 +1,38 @@
+name: qua
+
+type: regular 
+settings:
+  "instrumentType": "EQUITY"
+  "region": region
+  "universe": universe
+  "delay": delay
+  "decay": 0
+  "neutralization": neu
+  "truncation": 0.08
+  "pasteurization": "ON"
+  "unitHandling": "VERIFY"
+  "nanHandling": "ON"
+  "language": "FASTEXPR"
+  "maxTrade": ON
+  "visualization": False
+slots_counts:
+one_slot_number: 
+cases: 
+  - name: ts_first
+    para:
+      days: [5, 22, 66, 252]
+  - name:  ff
+    para:
+      sharpe: 0.7
+  - name: group_second
+    para:
+      sharpe: 0.85
+  - name: when_third
+    para:
+      sharpe: 0.9
+  - name: t_decay
+    para:
+      # s: 1
+      # e: 11
+  - name: t_truncation
+  - name: t_neutralization
