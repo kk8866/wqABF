@@ -9,7 +9,7 @@ def concat_pnls(arr: list):
     qua.login()
     df = pd.DataFrame()
     for i in arr:
-        path = f"/data/check/pnls/{i}.pkl"
+        path = f"../check/pnls/{i}.pkl"
         if os.path.exists(path):
             dft = pd.read_pickle(path).set_index("Date")
         else:

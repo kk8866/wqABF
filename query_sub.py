@@ -1,7 +1,7 @@
 import pandas as pd
 import sys
 from dateutil.relativedelta import relativedelta
-df = pd.read_csv("/data/check/os_alpha_ids.csv")
+df = pd.read_csv("../check/os_alpha_ids.csv")
 df["dateSubmitted"] = df["dateSubmitted"].apply(lambda x: x.split("T")[0])
 df["dateSubmitted"] = pd.to_datetime(df["dateSubmitted"])
 for i in range(4, 15):

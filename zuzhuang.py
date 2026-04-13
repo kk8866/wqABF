@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def gene_ids(region="USA", delay=1, count=20, total=200) -> list[list]:
-    df = pd.read_csv("/data/check/os_alpha_ids.csv")
+    df = pd.read_csv("../check/os_alpha_ids.csv")
     df["dateSubmitted"] = pd.to_datetime(
         df["dateSubmitted"].apply(lambda x: x.split("T")[0]))
     df = df[(df["dateSubmitted"] >= pd.Timestamp("2025-07-01"))
@@ -48,8 +48,8 @@ def gene_ids(region="USA", delay=1, count=20, total=200) -> list[list]:
         uni = "TOP3000"  
     if region == "IND":
         uni = "TOP500"    
-    os.system(f"mkdir /data/status/{region}-{delay}-{uni}-SUPER-s2")
-    df.to_csv(f"/data/status/{region}-{delay}-{uni}-SUPER-s2/data.csv")
+    os.makedirs(f"../status/{region}-{delay}-{uni}-SUPER-s2", exist_ok=True)
+    df.to_csv(f"../status/{region}-{delay}-{uni}-SUPER-s2/data.csv")
     return df
 
 if __name__ == "__main__":
