@@ -151,7 +151,6 @@ def init_cfg(project: str = "USA-s", expore=False, data_name: str = "", enhance=
     yamldata = model.yamldata
     # 加载配置文件
     load_test_path_file(yamldata.data_name)
-    os.system(f"cp -f {cfg.path}/case/{project}.yaml {cfg.test_path}")
     cfg.project_path = os.path.join(
         cfg.path + yamldata.data_name.split(".")[0])
     # 初始化DB，包含状态文件和结果文件

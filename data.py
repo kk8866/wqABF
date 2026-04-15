@@ -9,14 +9,14 @@ def ff(df: pd.DataFrame):
     return df
 
 
-def ts_first(df: pd.DataFrame, days: list = [5, 22, 66, 252], expore=False) -> pd.DataFrame:
-    days = [ 66]
+def ts_first(df: pd.DataFrame, expore=False) -> pd.DataFrame:
+    days = [66]
     ts_ops = [
-              "ts_product" ]
-    if expore: #探索模式的时候走全量搜索
+        "ts_product"]
+    if expore:  # 探索模式的时候走全量搜索
         days = [21, 66]
         ts_ops = ["-ts_std_dev", "ts_rank",  "ts_quantile",
-              "ts_product",  "ts_kurtosis", ]
+                  "ts_product",  "ts_kurtosis", ]
     arr = []
     for i in df.index:
         for day in days:
@@ -26,7 +26,7 @@ def ts_first(df: pd.DataFrame, days: list = [5, 22, 66, 252], expore=False) -> p
     return pd.DataFrame(arr)
 
 
-def ts_m(df: pd.DataFrame, days: list = [5, 22, 66, 252], expore=False) -> pd.DataFrame:
+def ts_m(df: pd.DataFrame, expore=False) -> pd.DataFrame:
     days = [21, 66]
     ts_ops = [
         "ts_mean",
