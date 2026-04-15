@@ -1,10 +1,10 @@
-import re
+import os,re
 import json
 import pandas as pd
 
 
 def op_list(field=""):
-    df = pd.read_csv("/data/check/os_alpha_ids.csv")
+    df = pd.read_csv("../check/os_alpha_ids.csv")
     df["dateSubmitted"] = df["dateSubmitted"].apply(lambda x: x.split("T")[0])
     df["dateSubmitted"] = pd.to_datetime(df["dateSubmitted"])
     df = df[df["type"] == "REGULAR"]
@@ -31,6 +31,15 @@ def op_list(field=""):
     result = re.findall("\w+", code)
     result = list(set(result))
     print(field, "是否存在于当前字段中", field in result)
+    if not os.path.exists("../check/operates.json"):
+        import api
+        qua = api.quant()
+        qua.login()
+        ops = qua.sess.get("https://api.worldquantbrain.com/operators").json()
+        with open("../check/operates.json", "w") as f:
+            f.write(json.dumps(ops, indent=2))
+        
+        
     with open("../check/operates.json", "r") as f:
         op = json.load(f)
     k = [i["name"] for i in op if "REGULAR" not in i.get("scope")]

@@ -1,6 +1,12 @@
 # 用于WQ的自动化回测框架
 
-tips： 主要用于在linux上的回测， windows及其他需要小改动
+### Tips
+
+1.  用于在linux上的回测， windows及其他需要小改动
+2. 理论上在手机上也能支持，下载个linux客户端软件如Termux，其他需要下载mysql和其他一些python pip依赖包（暂无装机文档，有空再整理）
+3. 可以直接通过手机远程连接直接的云主机，执行自动化回测，解放电脑。
+4. 扩展alpha模板非常简单方便，高手预计1-2分钟，新手预估不超过10分钟（也可借助AI）
+5. 操作简单
 
 ### 主要由四个文件夹构成
 
@@ -8,15 +14,15 @@ tips： 主要用于在linux上的回测， windows及其他需要小改动
 
 - status：用于保存状态文件和原始datafields
 
-- check：用于存放已有数据如已提交的alpha数据和拉取的pnls
+- check：用于存放已有数据如已提交的alpha数据和自动拉取的pnls
 
 - code：回测代码文件目录
 
-- brain.txt：存放用邮箱和密码，格式["xxx@gamail.com", "WQ_password"]
+- brain.txt：存放账号的邮箱和密码，格式["xxx@gamail.com", "WQ_password"]
 
 ### 开始
 
-1. 首先需要创建mysql数据库，数据库名称为地区名，如USA，每次开始会自动创建以用例名称为表名的数据表
+1. 首先需要创建mysql数据库，数据库名称为地区名，如USA，每次开始会自动创建以用例名称为表名的数据表， 如：USA_1_TOP3000_fundamental6_s202601
 
 2. 下载数据库： `python load_data.py USA TOP3000 fundamental6 s202601` (默认下载dleay1，s202601随意取，方便查看使用的模板和回测的时间)
 
@@ -24,8 +30,10 @@ tips： 主要用于在linux上的回测， windows及其他需要小改动
 
 4. 执行回测：如`python main.py -c USA-s`,linux简化为: ./start.py USA
 
-5. 查看回测状态及剩余额度: ./limit.sh USAs.logs返回信息参考虑`[root@instance-mrs18uwm code]# ./limit.sh USAs.log
-   ../status/USA-1-TOP3000-fundamental6-s202601/status.json
+5. 查看回测状态及剩余额度: ./limit.sh USAs.logs返回信息参考虑
+   
+   `[root@instance-mrs18uwm code]# ./limit.sh USAs.log`
+   ` ../status/USA-1-TOP3000-fundamental6-s202601/status.json
    
    USA-1-TOP3000-fundamental6-s202601
    {
@@ -41,11 +49,11 @@ tips： 主要用于在linux上的回测， windows及其他需要小改动
     },
     "total": {}
    }
-   [2026-04-11 17:22:41] limit: 5000, remaining: 3489.0, reset: 67039`
+   [2026-04-11 17:22:41] limit: 5000, remaining: 3489.0, reset: 67039 `
 
 6. 检查pc：`python check.py USA-1-TOP3000-fundamental6-s202601`
 
-7. 提交：`python submit.py alpha_id` ppa及Super Alpha需要手动填写描述，再用代码提交
+7. 提交：`python submit.py alpha_id`， 其中ppa及Super Alpha需要手动填写描述，再用代码提交
 
 8. 探索模式：`python main.py -r USA -u  TOP3000 -d fumdamental6 -e True` 该模式将该数据集下alpha出货量最大的字段来探索在不同模板下的表现，会将data下以`ts_`开头的方法拼接一起来回测以达到达到探索多个模板。`[root@instance-mrs18uwm code]# cat ../case/expore-s.yaml
    data_name: USA-1-ILLIQUID_MINVOL1M-model165-dh4
@@ -54,7 +62,7 @@ tips： 主要用于在linux上的回测， windows及其他需要小改动
      "instrumentType": "EQUITY"
      "region": USA
      "universe": ILLIQUID_MINVOL1M
-       # universe: TOP3000
+   
      "delay": 1
      "decay": 1
      neutralization: SECTOR
@@ -74,3 +82,21 @@ tips： 主要用于在linux上的回测， windows及其他需要小改动
        sharpe: 1`
 
 9. 
+
+### 主流程大概介绍
+
+1. 启动加载对应的case yaml模板
+
+2. 赋值log文件等文件名
+
+3. 初始化db数据表
+
+4. 加载状态，初始化或者读取已有状态
+
+5. 执行已有用例多阶段回测
+
+6. 每阶段之间自动识别0years-sharpe，达到阈值则不会进入下个阶段
+
+7. 已进行自动化剪枝，目前按照sharpe+fitness绝对值进行排名
+
+8. 自动翻转PNl以及自动打开maxTrade和自动添加表达式中的-， CHN地区不太适合

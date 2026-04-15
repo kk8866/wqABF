@@ -57,7 +57,7 @@ def get_simulations_status(status: bool = False):
 def create_case():
     '''创建用于保存结果的表'''
     # 用例开始前创建，用例结束后清空
-    with open("xxx.json", "r") as f:
+    with open("alpha_results.json", "r") as f:
         db_cfg: dict = json.load(f)
     # db_name = f"case_all"
     fields = [i[0] + " " + i[1] for i in db_cfg.items()]
@@ -72,7 +72,7 @@ class cfgs:
     columns: list = []
 
 
-with open("xxx.json", "r") as f:
+with open("alpha_results.json", "r") as f:
     db_cfg = json.load(f)
     columns = list(db_cfg.keys())
     # print(columns)

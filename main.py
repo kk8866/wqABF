@@ -78,8 +78,17 @@ def init_yamldata(project: str, expore=False, data_name=""):
         model.yamldata.settings.universe = data_name.split("-")[2]
 
 
-def read_data():
+def read_data(enhance: str = ""):
     print(cfg.deal_data)
+    if enhance:
+        deal_data = cfg.deal_data.split(".")
+        deal_data.insert(-1, "1")
+        cfg.deal_data = ".".join(deal_data)
+        print(cfg.deal_data)
+        qua = quant()
+        qua.login()
+        return deal_result.deal_data(pd.DataFrame(qua.deal_single_alpha_result(enhance)))
+
     if os.path.exists(cfg.deal_data):
         print("存在，续测")
         df = pd.read_json(cfg.deal_data)
@@ -131,7 +140,7 @@ def one_cases(func: str, df: pd.DataFrame, para: dict = {}):
     return df
 
 
-def init_cfg(project: str = "USA-s", expore=False, data_name: str = ""):
+def init_cfg(project: str = "USA-s", expore=False, data_name: str = "", enhance=""):
     # 加载yaml
     save_db.inin_database(data_name.split("-")[0]
                           if data_name else project.split("-")[0])
@@ -142,7 +151,6 @@ def init_cfg(project: str = "USA-s", expore=False, data_name: str = ""):
     yamldata = model.yamldata
     # 加载配置文件
     load_test_path_file(yamldata.data_name)
-    os.system(f"cp -f {cfg.path}/case/{project}.yaml {cfg.test_path}")
     cfg.project_path = os.path.join(
         cfg.path + yamldata.data_name.split(".")[0])
     # 初始化DB，包含状态文件和结果文件
@@ -152,7 +160,9 @@ def init_cfg(project: str = "USA-s", expore=False, data_name: str = ""):
         load_status()
     loger.log.log = logs(cfg.log_name)
     # 读取数据data.csv
-    df = read_data()
+    df = read_data(enhance)
+    if enhance:
+        yamldata.cases = [{"name": "fine_tune", "para": {}}]
     for i in yamldata.cases:
         func = yamldata.cases[i]["name"]  # case的名称如group_second
         para = yamldata.cases[i]["para"]  # case的参数
@@ -177,17 +187,21 @@ def delete():
         sess.delete(f"https://api.worldquantbrain.com/simulations/{i}")
 
 
-parser = argparse.ArgumentParser(prog="wq", description="参数解析")
-parser.add_argument("-e", "--explore", default=False,
-                    type=bool, help="是否启用探索模式")
-parser.add_argument("--region", "-r", type=str, help="地区")
-parser.add_argument("--universe", "-u", type=str, help="universe")
-parser.add_argument("--dataset", "-d", type=str, help="数据集名称")
-parser.add_argument("--delay", type=int, help="delay")
-parser.add_argument("--case", "-c", type=str, help="delay")
 if __name__ == "__main__":
     # delete()
+    parser = argparse.ArgumentParser(prog="wq", description="参数解析")
+    parser.add_argument("-e", "--explore", default=False,
+                        type=bool, help="是否启用探索模式")
+    parser.add_argument("--region", "-r", type=str, help="地区")
+    parser.add_argument("--universe", "-u", type=str, help="universe")
+    parser.add_argument("--dataset", "-d", type=str, help="数据集名称")
+    parser.add_argument("--delay", type=int, help="delay")
+    parser.add_argument("--case", "-c", type=str, help="case名称")
+    parser.add_argument("--enhance", type=str, help="增加操作符调优传入alphaid")
     args = parser.parse_args()
+    if args.enhance:
+        exit(init_cfg(args.case, enhance=args.enhance), )
+        pass
     if args.explore:
         # eg: data_name: USA-1-ILLIQUID_MINVOL1M-model165-dh4
         data_name = f"{args.region}-1-{args.universe}-{args.dataset}-a4"
