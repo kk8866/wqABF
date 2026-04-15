@@ -17,8 +17,6 @@ import save_db
 from case_db import cfg as dbcfg
 
 lock_alpha_result = threading.Lock()
-lock_submit = threading.Lock()
-
 
 class quant:
     def __init__(self) -> None:
@@ -257,7 +255,6 @@ class quant:
             # bug提交等待时未保存到数据库
             result = self.wait_post(
                 'https://api.worldquantbrain.com/simulations', data=alpha_list)
-            # lock_submit.release()
             print(result)
             if result is None:
                 print("当前result为None")
@@ -286,7 +283,6 @@ class quant:
 
         except:
             print("xxxxxxxxxxxxxxxx")
-            # lock_submit.release()
             time.sleep(10)
             traceback.print_exc()
 
