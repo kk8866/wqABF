@@ -157,7 +157,7 @@ def find_all(df: pd.DataFrame, n=1):
     # return
     ds = pd.DataFrame()
     for i in fname:
-        ds = pd.concat([ds, getattr(data, i)(df.head(n), )])
+        ds = pd.concat([ds, getattr(data, i)(df.head(n), expore=True)])
     ds.reset_index(inplace=True, drop=True)
     print(ds.shape[0])
     print(ds["code"].tolist())
