@@ -78,17 +78,17 @@ def init_yamldata(project: str, expore=False, data_name=""):
         model.yamldata.settings.universe = data_name.split("-")[2]
 
 
-def read_data(enhance:str=""):
+def read_data(enhance: str = ""):
     print(cfg.deal_data)
     if enhance:
         deal_data = cfg.deal_data.split(".")
         deal_data.insert(-1, "1")
-        cfg.deal_data = ".".join(deal_data )
+        cfg.deal_data = ".".join(deal_data)
         print(cfg.deal_data)
         qua = quant()
         qua.login()
         return deal_result.deal_data(pd.DataFrame(qua.deal_single_alpha_result(enhance)))
-        
+
     if os.path.exists(cfg.deal_data):
         print("存在，续测")
         df = pd.read_json(cfg.deal_data)
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", "-d", type=str, help="数据集名称")
     parser.add_argument("--delay", type=int, help="delay")
     parser.add_argument("--case", "-c", type=str, help="case名称")
-    parser.add_argument( "--enhance","-e",type=str, help="增加操作符调优传入alphaid")
+    parser.add_argument("--enhance", type=str, help="增加操作符调优传入alphaid")
     args = parser.parse_args()
     if args.enhance:
         exit(init_cfg(args.case, enhance=args.enhance), )
