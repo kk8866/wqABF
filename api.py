@@ -18,6 +18,7 @@ from case_db import cfg as dbcfg
 
 lock_alpha_result = threading.Lock()
 
+
 class quant:
     def __init__(self) -> None:
         self.arr = {}
@@ -173,17 +174,6 @@ class quant:
         case_db.update_case_db(alpha_id, {"zeroCount": zc})
         return {"id": alpha_id, "zeroCount": zc}
 
-    def update(self):
-        sql = f"SELECT id, sharpe, fitness FROM {dbcfg.case_result_db} WHERE sharpe >1 AND fitness >0.8;"
-        columns = ["id", "sharpe", "fitness"]
-        data = save_db.query(sql)[1]
-        ids = [i[0] for i in data]
-        print(len(ids))
-        self.login()
-        for i in ids:
-            result = self.deal_single_alpha_result(i)
-            # waring = result.get("WARNING", 10)
-            case_db.update_case_db(i, result)
 
     def childrens_to_alpha_details(self, children):
         alphaid = children
@@ -209,9 +199,11 @@ class quant:
             log.log(f"{children} get alpha rsult fail!!!")
             return
         case_db.insert_case([detail])
-        if abs(detail.get("sharpe", 0)) > 0.9:
+        if max(abs(detail.get("sharpe", 0)), abs(detail.get("investabilityConstrained_sharpe", 0))) \
+            > model.yamldata.para.get("sharpe", 1):
             # 获取yeardata数据
             self.get_zero_sharpe(alphaid)
+            # update
             # 下载pnl数据
             self._get_alpha_pnl(alphaid)
             pass
@@ -423,11 +415,8 @@ class quant:
         '''
         alpha_ids = df["id"].values.tolist()
         print(len(alpha_ids))
-        # def alpha_res_func(alpha_id): return self._get_alpha_pnl(
-        #     alpha_id).set_index('Date')
-
-        def alpha_res_func(alpha_id): return self._get_alpha_pnl(
-            alpha_id).set_index('Date')
+        alpha_res_func = lambda x: self._get_alpha_pnl(
+            x).set_index('Date')
         with ThreadPoolExecutor(max_workers=10) as executor:
             alpha_results = executor.map(alpha_res_func, alpha_ids)
         alpha_results = list(alpha_results)

@@ -1,9 +1,8 @@
 
 
 import pandas as pd
-from api import quant
 import save_db
-from model import yamldata
+import model
 from case_db import cfg
 
 
@@ -52,9 +51,10 @@ def deal_data(df: pd.DataFrame, sharpe: float = 0.9, fitness=0.3, n: int = 1,
     df = pd.DataFrame(arr)
     df = df[(abs(df["sharpe"]) >= sharpe) & (abs(df["fitness"]) >= fitness)]
     # CHN单独处理
-    if "CHN" in cfg.case_result_db:
-        df = df[(df["sharpe"] >= sharpe) | (df["fitness"] >= 1)]
-
+    if model.yamldata.para.get("flip") == "YES":
+        df = df[df["sharpe"]<0]
+    elif model.yamldata.para.get("flip") == "NO":
+        df = df[df["sharpe"]>0] 
     df = df.groupby(["exp", "op"]).head(n)
     df.reset_index(drop=True, inplace=True)
     print("处理之后的数据:", df.shape)
@@ -72,7 +72,7 @@ def deal_data(df: pd.DataFrame, sharpe: float = 0.9, fitness=0.3, n: int = 1,
 
 def init_settings(df: pd.DataFrame):
     arr = []
-    settings = list(yamldata.settings.model_dump().keys())
+    settings = list(model.yamldata.settings.model_dump().keys())
     for i in df.index:
         js = df.loc[i].to_dict()
         js["settings"] = {i: js.get(i) for i in settings}

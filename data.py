@@ -11,8 +11,7 @@ def ff(df: pd.DataFrame):
 
 def ts_first(df: pd.DataFrame, expore=False) -> pd.DataFrame:
     days = [66]
-    ts_ops = [
-        "ts_product"]
+    ts_ops = ["ts_product"]
     if expore:  # 探索模式的时候走全量搜索
         days = [21, 66]
         ts_ops = ["-ts_std_dev", "ts_rank",  "ts_quantile",
@@ -29,12 +28,7 @@ def ts_first(df: pd.DataFrame, expore=False) -> pd.DataFrame:
 def ts_m(df: pd.DataFrame, expore=False) -> pd.DataFrame:
     days = [21, 66]
     ts_ops = [
-        "ts_mean",
-        "ts_sum",
-        "ts_max",
-        "ts_min",
-        "ts_median",
-    ]
+        "ts_mean", "ts_sum", "ts_max",  "ts_min", "ts_median", ]
     if expore:
         days = [21, 63, 126]
         ts_ops = ["ts_mean", "ts_sum", "ts_max",  "ts_min",   "ts_median",]
@@ -145,7 +139,22 @@ def t_neutralization(df: pd.DataFrame, now: str = None, ) -> pd.DataFrame:
     print(len(arrs))
     return pd.DataFrame(arrs)
 # 获取表信息
-
+def fine_tune(df: pd.DataFrame):
+    ops1 = ["log", "s_log_1p", "quantile", "rank",
+            "winsorize", "hump", "abs", "sign", "sqrt", "ceiling", "arc_cos",
+            "arc_sin", "arc_tan", "exp", "floor", "fraction", "purify", "round", "sigmoid", "sign", "tanh"]
+    ops2 = ['left_tail({}, maximum = 0.98)',
+            'right_tail({}, minimum = 0.03)', "signed_power({}, 0.7)", "signed_power({}, 1.5)", "truncate( {},maxPercent=0.01)"]
+    arr = []
+    for i in df.index:
+        for op in ops1:
+            arr.append({"code": f'{op}({df.loc[i]["code"]})',
+                        "settings": df.loc[i]["settings"]})
+        for op2 in ops2:
+            print(f'{op2.format(df.loc[i]["code"])}')
+            arr.append(
+                {"code": f'{op2.format(df.loc[i]["code"])}',  "settings": df.loc[i]["settings"]})
+    return pd.DataFrame(arr)
 
 def find_all(df: pd.DataFrame, n=1):
     # 取前n个字段用于探索
