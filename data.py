@@ -111,6 +111,10 @@ def t_decay(df: pd.DataFrame,  s=1, n=11, ) -> pd.DataFrame:
             arr.append({"code": df.loc[i]["code"], "settings": settings})
     return pd.DataFrame(arr)
 
+def test_flip(df: pd.DataFrame):
+    return df[df["sharpe"]<0] if model.yamldata.para.get("flip") else  df[df["sharpe"]>0]
+
+
 
 def t_neutralization(df: pd.DataFrame, now: str = None, ) -> pd.DataFrame:
     """用于便利各种中性化"""
@@ -144,7 +148,9 @@ def fine_tune(df: pd.DataFrame):
             "winsorize", "hump", "abs", "sign", "sqrt", "ceiling", "arc_cos",
             "arc_sin", "arc_tan", "exp", "floor", "fraction", "purify", "round", "sigmoid", "sign", "tanh"]
     ops2 = ['left_tail({}, maximum = 0.98)',
-            'right_tail({}, minimum = 0.03)', "signed_power({}, 0.7)", "signed_power({}, 1.5)", "truncate( {},maxPercent=0.01)"]
+            'right_tail({}, minimum = 0.03)', "signed_power({}, 0.7)", "signed_power({}, 1.5)", "truncate( {},maxPercent=0.01)",
+            "round_down({}, f=1)"
+            ]
     arr = []
     for i in df.index:
         for op in ops1:

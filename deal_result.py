@@ -53,6 +53,8 @@ def deal_data(df: pd.DataFrame, sharpe: float = 0.9, fitness=0.3, n: int = 1,
     # CHN单独处理
     if model.yamldata.para.get("flip") == "YES":
         df = df[df["sharpe"]<0]
+        if df.shape[0] ==0:
+            return pd.DataFrame()
     elif model.yamldata.para.get("flip") == "NO":
         df = df[df["sharpe"]>0] 
     df = df.groupby(["exp", "op"]).head(n)
