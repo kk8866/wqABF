@@ -84,5 +84,8 @@ def load_status():
         print(status.current)
 
 
+class Super_settings(settingsModel):
+    selectionLimit: int = 25
+    selectionHandling: str = "POSITIVE"  
 global yamldata
 yamldata: yamldataModel = None

@@ -8,7 +8,7 @@ import pandas as pd
 import data
 from loger import logs
 import loger
-from model import cfg, load_status, save_status, current_model, status, yamldataModel
+from model import cfg, load_status, save_status, current_model, status, yamldataModel, Super_settings
 import model
 import case_db
 from api import quant
@@ -67,7 +67,7 @@ def init_db():
 
 
 def init_yamldata(project: str, expore=False, data_name=""):
-
+    model.yamldata = model.yamldataModel()
     yldata = load_yaml(project)
     model.yamldata = yamldataModel.model_validate(yldata)
     model.yamldata.para = yldata.get("para", {})
@@ -76,6 +76,8 @@ def init_yamldata(project: str, expore=False, data_name=""):
         model.yamldata.data_name = data_name
         model.yamldata.settings.region = data_name.split("-")[0]
         model.yamldata.settings.universe = data_name.split("-")[2]
+    if model.yamldata.type == "SUPER":
+        model.yamldata.settings = Super_settings().model_validate(yldata["settings"])
 
 
 def read_data(enhance: str = ""):
@@ -144,7 +146,7 @@ def init_cfg(project: str = "USA-s", expore=False, data_name: str = "", enhance=
     # 加载yaml
     save_db.inin_database(data_name.split("-")[0]
                           if data_name else project.split("-")[0])
-    model.yamldata = model.yamldataModel()
+    
     # 初始化配置文件
     init_yamldata(project, expore, data_name=data_name)
     print("yaml load finished.")
